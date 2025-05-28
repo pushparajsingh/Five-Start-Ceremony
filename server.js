@@ -1,7 +1,9 @@
+require('dotenv').config();  // add always at the top.
 const express = require("express");
 const app = express();
 const db = require("./db");
 
+const PORT = process.env.PORT || 3000; 
 const bodyperser = require("body-parser");
 const personRoutes = require("./routes/personRoutes");
 const MenuRoutes = require("./routes/menuRoutes");
@@ -14,6 +16,6 @@ app.get("/", (req, res) => {
 app.use("/person", personRoutes);
 app.use("/menu", MenuRoutes);
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log("Listion on port 3000");
 });
