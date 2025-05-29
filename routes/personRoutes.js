@@ -2,10 +2,30 @@ const express = require("express");
 const router = express.Router();
 const Person = require("../models/person");
 const { generateToken:jwtToken, jwtAuthMeddleware } = require("../Auth/jwtToken");
+const multer = require("multer");
 
-router.post("/register", async (req, res) => {
+
+//this is for file upload in server folder uploads
+{/*}
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+const upload = multer({ storage });
+*/}
+
+
+
+const storage = multer.memoryStorage(); // Store files in memory
+const upload = multer({ storage: storage }); // Use memory storage for file uploads
+router.post("/register", upload.single('photo'), async (req, res) => {
   try {
     const data = req.body;
+    data.photo = req.file ? req.file.buffer.toString("base64") : null; // Get the file path if uploaded
     const newPerson = new Person(data);
     const responce = await newPerson.save(data);
     const token = jwtToken({_id: responce._id, username: responce.username });
