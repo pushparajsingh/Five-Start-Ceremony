@@ -7,8 +7,11 @@ const PORT = process.env.PORT || 3000;
 const bodyperser = require("body-parser");
 const personRoutes = require("./routes/personRoutes");
 const MenuRoutes = require("./routes/menuRoutes");
+const passport = require("./Auth/usernamePasswordAuth");
 app.use(bodyperser.json());
 
+app.use(passport.initialize());
+const localAuthMiddleware = passport.authenticate('local',{ session: false });
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
